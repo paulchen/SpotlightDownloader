@@ -32,6 +32,7 @@ public class ImageDataDownloaderService {
     private static final List<String> PID_LIST = Arrays.asList("209567", "279978", "209562");
 
     private final LocalesService localesService;
+    private final MetricsService metricsService;
 
     private DownloadUrl getDownloadUrl() {
         final Random random = new Random();
@@ -58,6 +59,8 @@ public class ImageDataDownloaderService {
         httpGet.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate");
 
         try (final CloseableHttpResponse response = httpClient.execute(httpGet)) {
+            metricsService.recordMetric(MetricsService.Metric.DOWNLOAD_IMAGE_DATA);
+
             final HttpEntity entity = response.getEntity();
             final String body = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
             final int statusCode = response.getStatusLine().getStatusCode();
@@ -70,6 +73,7 @@ public class ImageDataDownloaderService {
             if (errors != null) {
                 int errorCode = errors.get(0).get("code").asInt();
                 if (errorCode == 2040 || errorCode == 2000) {
+                    metricsService.recordMetric(MetricsService.Metric.NO_IMAGE_DATA);
                     return null;
                 }
                 throw new SpotlightException(String.format("Error in response: %s", body));

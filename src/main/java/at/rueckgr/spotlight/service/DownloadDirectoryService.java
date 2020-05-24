@@ -31,7 +31,9 @@ public class DownloadDirectoryService {
     private final Map<String, DownloadedImage> downloadedImages = new HashMap<>();
 
     private final ImageDownloaderService imageDownloaderService = new ImageDownloaderService();
+
     private final MetadataService metadataService;
+    private final MetricsService metricsService;
 
     public void init() {
         createDirectory();
@@ -86,6 +88,7 @@ public class DownloadDirectoryService {
         downloadedImages.put(hash, new DownloadedImage(nextFile, hash, downloadableImage.getDownloadUrl().getLocale()));
 
         log.info(String.format("New image added : %s", downloadableImage));
+        metricsService.recordMetric(MetricsService.Metric.DOWNLOAD_IMAGE);
     }
 
     private void renameImageIfRequired(final DownloadableImage downloadableImage) {
@@ -110,6 +113,8 @@ public class DownloadDirectoryService {
 
             log.info("Renaming {} to {}", downloadedImage.getName(), newFile.getName());
             downloadedImages.put(hash, new DownloadedImage(newFile, hash, downloadableImage.getDownloadUrl().getLocale()));
+
+            metricsService.recordMetric(MetricsService.Metric.RENAME_IMAGE);
         }
     }
 

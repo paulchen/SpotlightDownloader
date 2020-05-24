@@ -7,15 +7,19 @@ public class SpotlightDownloader {
     private final DownloadDirectoryService downloadDirectoryService;
     private final ImageDataDownloaderService imageDataDownloaderService;
     private final MetadataService metadataService;
+    private final MetricsService metricsService;
+
     public static final int ITERATIONS = 100;
 
     public SpotlightDownloader() {
         // using Dependency Injection, life would be easier
         final LocalesService localesService = new LocalesService();
+
+        metricsService = new MetricsService();
         metadataService = new MetadataService(localesService);
-        downloadDirectoryService = new DownloadDirectoryService(metadataService);
+        downloadDirectoryService = new DownloadDirectoryService(metadataService, metricsService);
         metadataService.setDownloadDirectoryService(downloadDirectoryService);
-        imageDataDownloaderService = new ImageDataDownloaderService(localesService);
+        imageDataDownloaderService = new ImageDataDownloaderService(localesService, metricsService);
     }
 
     public void run() {
@@ -26,7 +30,9 @@ public class SpotlightDownloader {
             log.info("Iteration {}/{} done", i, ITERATIONS);
             worker.run();
         }
+        log.info("All iterations done");
 
         metadataService.saveMetadata();
+        metricsService.logMetrics();
     }
 }
