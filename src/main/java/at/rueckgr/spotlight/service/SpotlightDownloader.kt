@@ -16,11 +16,11 @@ fun main() {
 
     downloadDirectoryService.init()
     val worker = Worker(imageDataDownloaderService, downloadDirectoryService)
-    for(i in 0..iterations) {
-        log.info("Iteration {}/{} done", i, iterations)
+    log.info("Starting download")
+    for(i in 1..iterations) {
         worker.run()
+        log.info("Iteration {}/{} done", i, iterations)
     }
-    log.info("All iterations done")
 
     metadataService.saveMetadata()
     metricsService.logMetrics()

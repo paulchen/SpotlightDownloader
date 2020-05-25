@@ -10,14 +10,13 @@ import java.io.FileWriter
 import java.util.*
 import kotlin.collections.HashMap
 
-const val METADATA_FILENAME = ".meta"
-
 class MetadataService (val localesService: LocalesService) {
-    val fileLocales = HashMap<String, Locale>()
+    private val metadataFilename = ".meta"
+    private val fileLocales = HashMap<String, Locale>()
     var downloadDirectoryService: DownloadDirectoryService? = null
 
     fun loadMetadata() {
-        val metadataFile = File(downloadDirectoryService!!.folderName + File.separator + METADATA_FILENAME)
+        val metadataFile = File(downloadDirectoryService!!.folderName + File.separator + metadataFilename)
         if (metadataFile.exists()) {
             val metadata: MetadataFile = Gson().fromJson(FileReader(metadataFile), MetadataFile::class.java)
             for(downloadedFile in metadata.downloadedFiles) {
@@ -38,7 +37,7 @@ class MetadataService (val localesService: LocalesService) {
                 .map { MetadataInfo(it.hash, it.name, LocaleInfo(it.locale.country, it.locale.language)) }
         val metadata = MetadataFile(downloadedFiles)
 
-        val metadataFile = File(downloadDirectoryService!!.folderName + File.separator + METADATA_FILENAME)
+        val metadataFile = File(downloadDirectoryService!!.folderName + File.separator + metadataFilename)
         FileWriter(metadataFile).use { Gson().toJson(metadata, it) }
     }
 
