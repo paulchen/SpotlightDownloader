@@ -5,8 +5,6 @@ import at.rueckgr.spotlight.model.DownloadableImage;
 import at.rueckgr.spotlight.util.SpotlightException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -15,6 +13,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -25,14 +24,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-@Log4j2
-@RequiredArgsConstructor
 public class ImageDataDownloaderService {
     private static final String URL = "https://arc.msn.com/v3/Delivery/Cache?pid=%s&ctry=%s&lc=%s&fmt=json&lo=%s&disphorzres=9999&dispvertres=9999";
     private static final List<String> PID_LIST = Arrays.asList("209567", "279978", "209562");
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ImageDataDownloaderService.class);
 
     private final LocalesService localesService;
     private final MetricsService metricsService;
+
+    public ImageDataDownloaderService(LocalesService localesService, MetricsService metricsService) {
+        this.localesService = localesService;
+        this.metricsService = metricsService;
+    }
 
     private DownloadUrl getDownloadUrl() {
         final Random random = new Random();

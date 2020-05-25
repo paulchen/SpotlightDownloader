@@ -1,16 +1,19 @@
 package at.rueckgr.spotlight.service;
 
 import at.rueckgr.spotlight.model.DownloadableImage;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Logger;
 
 
-@Log4j2
-@RequiredArgsConstructor
 public class Worker implements Runnable {
 
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Worker.class);
     private final ImageDataDownloaderService imageDataDownloaderService;
     private final DownloadDirectoryService downloadDirectoryService;
+
+    public Worker(ImageDataDownloaderService imageDataDownloaderService, DownloadDirectoryService downloadDirectoryService) {
+        this.imageDataDownloaderService = imageDataDownloaderService;
+        this.downloadDirectoryService = downloadDirectoryService;
+    }
 
     public void run() {
         final DownloadableImage downloadableImage = imageDataDownloaderService.fetchImageData();

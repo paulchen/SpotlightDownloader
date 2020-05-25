@@ -6,8 +6,6 @@ import at.rueckgr.spotlight.model.MetadataFile;
 import at.rueckgr.spotlight.model.MetadataInfo;
 import at.rueckgr.spotlight.util.SpotlightException;
 import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,14 +18,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@RequiredArgsConstructor
-@Setter
 public class MetadataService {
     public static final String METADATA_FILENAME = ".meta";
     public Map<String, Locale> fileLocales = new HashMap<>();
 
     private final LocalesService localesService;
     private DownloadDirectoryService downloadDirectoryService;
+
+    public MetadataService(LocalesService localesService) {
+        this.localesService = localesService;
+    }
 
     public void loadMetadata() {
         final File metadataFile = new File(downloadDirectoryService.getFolderName() + File.separator + METADATA_FILENAME);
@@ -81,5 +81,13 @@ public class MetadataService {
 
     public Locale getLocale(final String hash) {
         return fileLocales.get(hash);
+    }
+
+    public void setFileLocales(Map<String, Locale> fileLocales) {
+        this.fileLocales = fileLocales;
+    }
+
+    public void setDownloadDirectoryService(DownloadDirectoryService downloadDirectoryService) {
+        this.downloadDirectoryService = downloadDirectoryService;
     }
 }

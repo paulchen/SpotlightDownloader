@@ -3,11 +3,10 @@ package at.rueckgr.spotlight.service;
 import at.rueckgr.spotlight.model.DownloadableImage;
 import at.rueckgr.spotlight.model.DownloadedImage;
 import at.rueckgr.spotlight.util.SpotlightException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -19,14 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Log4j2
-@RequiredArgsConstructor
 public class DownloadDirectoryService {
 
     public static final String FOLDER_NAME = "images";
     public static final String PRETTY_FILENAME_PATTERN = "^((?!\\W|^R(.){5,6}$).|,| | |-|\\.|\\(|\\)|')*$";
 
     private static final List<String> preferredLanguages = Arrays.asList("en", "de");
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DownloadDirectoryService.class);
 
     private final Map<String, DownloadedImage> downloadedImages = new HashMap<>();
 
@@ -34,6 +32,11 @@ public class DownloadDirectoryService {
 
     private final MetadataService metadataService;
     private final MetricsService metricsService;
+
+    public DownloadDirectoryService(MetadataService metadataService, MetricsService metricsService) {
+        this.metadataService = metadataService;
+        this.metricsService = metricsService;
+    }
 
     public void init() {
         createDirectory();
