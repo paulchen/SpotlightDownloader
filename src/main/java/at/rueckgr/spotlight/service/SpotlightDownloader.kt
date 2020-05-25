@@ -11,7 +11,7 @@ fun main() {
     val metricsService = MetricsService()
     val metadataService = MetadataService(localesService)
     val downloadDirectoryService = DownloadDirectoryService(metadataService, metricsService)
-    metadataService.setDownloadDirectoryService(downloadDirectoryService)
+    metadataService.downloadDirectoryService = downloadDirectoryService
     val imageDataDownloaderService = ImageDataDownloaderService(localesService, metricsService)
 
     downloadDirectoryService.init()

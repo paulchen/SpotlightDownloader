@@ -4,7 +4,7 @@ import com.neovisionaries.i18n.LocaleCode
 import java.util.*
 
 class LocalesService {
-    val locales: List<Locale> = LocaleCode.values()
+    private val locales: List<Locale> = LocaleCode.values()
             .map { it.toLocale() }
             .filter { it.country.isNotBlank() && it.language.isNotBlank() }
 
