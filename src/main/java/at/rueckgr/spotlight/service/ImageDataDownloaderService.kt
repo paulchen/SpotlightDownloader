@@ -26,7 +26,7 @@ class ImageDataDownloaderService (private val localesService: LocalesService, pr
     }
 
     fun fetchImageData(): DownloadableImage? {
-        val httpClient = HttpClients.custom().disableDefaultUserAgent().build();
+        val httpClient = HttpClients.custom().disableDefaultUserAgent().build()
         val objectMapper = ObjectMapper()
 
         val downloadUrl = getDownloadUrl()

@@ -10,7 +10,7 @@ import java.io.FileWriter
 import java.util.*
 import kotlin.collections.HashMap
 
-class MetadataService (val localesService: LocalesService) {
+class MetadataService (private val localesService: LocalesService) {
     private val metadataFilename = ".meta"
     private val fileLocales = HashMap<String, Locale>()
     var downloadDirectoryService: DownloadDirectoryService? = null
@@ -34,7 +34,7 @@ class MetadataService (val localesService: LocalesService) {
     fun saveMetadata() {
         val downloadedFiles = downloadDirectoryService!!.downloadedImages.values
                 .filter { it.locale != null }
-                .map { MetadataInfo(it.hash, it.name, LocaleInfo(it.locale.country, it.locale.language)) }
+                .map { MetadataInfo(it.hash, it.name, LocaleInfo(it.locale!!.country, it.locale.language)) }
         val metadata = MetadataFile(downloadedFiles)
 
         val metadataFile = File(downloadDirectoryService!!.folderName + File.separator + metadataFilename)

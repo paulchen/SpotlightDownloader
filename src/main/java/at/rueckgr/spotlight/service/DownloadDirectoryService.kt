@@ -91,7 +91,7 @@ class DownloadDirectoryService (private val metadataService: MetadataService, pr
         val newFilename = downloadableImage.description
         val newFileIsValidName = newFilename.matches(prettyFilenamePattern)
 
-        val oldLanguage = downloadedImage.locale.language
+        val oldLanguage = downloadedImage.locale?.language ?: ""
         val newLanguage = downloadableImage.downloadUrl.locale.language
         val betterLanguageFound = (oldLanguage !in preferredLanguages && newLanguage in preferredLanguages) ||
                 (oldLanguage in preferredLanguages && preferredLanguages.contains(newLanguage) &&

@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class MetricsService : Logging {
-    val metricValues = ConcurrentHashMap<Metric, AtomicInteger>()
+    private val metricValues = ConcurrentHashMap<Metric, AtomicInteger>()
 
     fun recordMetric(metric: Metric) {
         metricValues.putIfAbsent(metric, AtomicInteger())
