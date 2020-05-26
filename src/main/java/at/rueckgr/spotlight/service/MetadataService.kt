@@ -32,7 +32,7 @@ class MetadataService (val localesService: LocalesService) {
     }
 
     fun saveMetadata() {
-        val downloadedFiles = downloadDirectoryService!!.downloadedFiles.values
+        val downloadedFiles = downloadDirectoryService!!.downloadedImages.values
                 .filter { it.locale != null }
                 .map { MetadataInfo(it.hash, it.name, LocaleInfo(it.locale.country, it.locale.language)) }
         val metadata = MetadataFile(downloadedFiles)

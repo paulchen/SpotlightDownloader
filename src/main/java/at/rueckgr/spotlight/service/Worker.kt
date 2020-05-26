@@ -9,7 +9,7 @@ class Worker (private val imageDataDownloaderService: ImageDataDownloaderService
     fun run() {
         val downloadableImage: DownloadableImage? = imageDataDownloaderService.fetchImageData()
         if (downloadableImage == null) {
-            logger().info("o image found, aborting")
+            logger().info("No image found, aborting")
             return
         }
 
