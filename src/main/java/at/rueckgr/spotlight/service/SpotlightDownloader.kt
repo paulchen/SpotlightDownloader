@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager
 fun main() {
     val log = LogManager.getLogger("Main")
 
-    val iterations = 1
+    val iterations = 100
 
     val localesService = LocalesService()
     val metricsService = MetricsService()
