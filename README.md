@@ -8,7 +8,7 @@ Downloads images used by Microsoft Spotlight. Heavily inspired by https://github
 
 Requires JDK 11 (or above) and Apache Maven. Build an run with
 
-`mvn clean install appassembler:assemble`
+`mvn clean install`
 
 `./startup.sh`
 
