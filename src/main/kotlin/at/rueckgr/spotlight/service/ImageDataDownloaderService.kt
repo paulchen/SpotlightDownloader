@@ -16,12 +16,12 @@ import java.text.Normalizer
 import java.util.*
 
 class ImageDataDownloaderService (private val localesService: LocalesService, private val metricsService: MetricsService) : Logging {
-    private val url = "https://arc.msn.com/v3/Delivery/Cache?pid=%s&ctry=%s&lc=%s&fmt=json&lo=%s&disphorzres=9999&dispvertres=9999"
+    private val url = "https://arc.msn.com/v3/Delivery/Placement?pid=%s&cdm=1&ctry=%s&lc=%s&pl=%s&fmt=json&lo=%s&disphorzres=9999&dispvertres=9999"
     private val pidList = arrayOf("209567", "279978", "209562")
 
     private fun getDownloadUrl(): DownloadUrl {
         val locale =  localesService.getRandomLocale()
-        val downloadUrl = String.format(url, pidList.random(), locale.country, locale.language, IntRange(100000, 999999).random())
+        val downloadUrl = String.format(url, pidList.random(), locale.country, locale.language, locale.language, IntRange(100000, 999999).random())
         return DownloadUrl(downloadUrl, locale)
     }
 
