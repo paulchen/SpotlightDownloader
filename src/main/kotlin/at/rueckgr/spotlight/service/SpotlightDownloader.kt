@@ -4,9 +4,9 @@ import org.apache.logging.log4j.LogManager
 import kotlin.system.exitProcess
 
 fun main() {
-    try {
-        val log = LogManager.getLogger("Main")
+    val log = LogManager.getLogger("Main")
 
+    try {
         val iterations = 100
 
         val localesService = LocalesService()
@@ -28,6 +28,7 @@ fun main() {
         metricsService.logMetrics()
     }
     catch (e: Throwable) {
+        log.error("Exception occurred", e)
         exitProcess(1)
     }
 }
