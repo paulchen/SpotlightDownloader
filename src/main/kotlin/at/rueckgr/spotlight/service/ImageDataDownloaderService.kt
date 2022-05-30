@@ -78,5 +78,6 @@ class ImageDataDownloaderService (private val localesService: LocalesService, pr
         return Normalizer
                 .normalize(description, Normalizer.Form.NFD)
                 .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
+                .trim()
     }
 }
