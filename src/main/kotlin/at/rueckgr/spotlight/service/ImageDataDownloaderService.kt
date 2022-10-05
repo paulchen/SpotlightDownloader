@@ -10,6 +10,7 @@ import org.apache.commons.codec.binary.Hex
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpHeaders
 import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
 import java.nio.charset.StandardCharsets
 import java.text.Normalizer
@@ -18,6 +19,7 @@ import java.util.*
 class ImageDataDownloaderService (private val localesService: LocalesService, private val metricsService: MetricsService) : Logging {
     private val url = "https://arc.msn.com/v3/Delivery/Placement?pid=%s&cdm=1&ctry=%s&lc=%s&pl=%s&fmt=json&lo=%s&disphorzres=9999&dispvertres=9999"
     private val pidList = arrayOf("209567", "279978", "209562")
+    private val downloadSleepTimes = arrayOf(0, 300, 900, 1800)
 
     private fun getDownloadUrl(): DownloadUrl {
         val locale =  localesService.getRandomLocale()
@@ -27,13 +29,29 @@ class ImageDataDownloaderService (private val localesService: LocalesService, pr
 
     fun fetchImageData(): DownloadableImage? {
         val httpClient = HttpClients.custom().disableDefaultUserAgent().build()
-        val objectMapper = ObjectMapper()
 
         val downloadUrl = getDownloadUrl()
         logger().info("Download URL: {}", downloadUrl)
         val httpGet = HttpGet(downloadUrl.url)
         httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
         httpGet.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate")
+
+        for (element in downloadSleepTimes) {
+            logger().info("Sleeping {} seconds", element)
+            Thread.sleep(element * 1000L)
+
+            try {
+                return executeHttpRequest(httpClient, httpGet, downloadUrl)
+            }
+            catch (e: SpotlightException) {
+                logger().error("Exception occurred", e)
+            }
+        }
+        throw SpotlightException("Download failed, giving up now")
+    }
+
+    private fun executeHttpRequest(httpClient: CloseableHttpClient, httpGet: HttpGet, downloadUrl: DownloadUrl): DownloadableImage? {
+        val objectMapper = ObjectMapper()
         httpClient.execute(httpGet).use {
             metricsService.recordMetric(MetricsService.Metric.DOWNLOAD_IMAGE_DATA)
             if(it.statusLine.statusCode != 200) {
