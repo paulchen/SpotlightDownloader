@@ -103,11 +103,12 @@ class DownloadDirectoryService (private val metadataService: MetadataService, pr
     }
 
     private fun getNextFile(filename: String): File {
-        var file = File(folderName + File.separator + filename + ".jpg")
+        val cleanFilename = filename.replace("/", ", ")
+        var file = File(folderName + File.separator + cleanFilename + ".jpg")
         var fileNo = 0
         while (file.exists()) {
             fileNo++
-            file = File(folderName + File.separator + filename + fileNo + ".jpg")
+            file = File(folderName + File.separator + cleanFilename + fileNo + ".jpg")
         }
         return file
     }
