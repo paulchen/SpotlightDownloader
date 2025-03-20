@@ -8,10 +8,10 @@ import at.rueckgr.spotlight.util.logger
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.io.IOUtils
-import org.apache.http.HttpHeaders
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.CloseableHttpClient
-import org.apache.http.impl.client.HttpClients
+import org.apache.hc.client5.http.classic.methods.HttpGet
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
+import org.apache.hc.client5.http.impl.classic.HttpClients
+import org.apache.hc.core5.http.HttpHeaders
 import java.nio.charset.StandardCharsets
 import java.text.Normalizer
 import java.util.*
@@ -54,8 +54,8 @@ class ImageDataDownloaderService (private val localesService: LocalesService, pr
         val objectMapper = ObjectMapper()
         httpClient.execute(httpGet).use {
             metricsService.recordMetric(MetricsService.Metric.DOWNLOAD_IMAGE_DATA)
-            if(it.statusLine.statusCode != 200) {
-                throw SpotlightException(String.format("Status Code Error: %s", it.statusLine.statusCode))
+            if(it.code != 200) {
+                throw SpotlightException(String.format("Status Code Error: %s", it.code))
             }
 
             val body = IOUtils.toString(it.entity.content, StandardCharsets.UTF_8)

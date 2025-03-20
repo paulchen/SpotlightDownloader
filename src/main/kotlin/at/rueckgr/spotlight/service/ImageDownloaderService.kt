@@ -5,8 +5,8 @@ import at.rueckgr.spotlight.util.Logging
 import at.rueckgr.spotlight.util.SpotlightException
 import at.rueckgr.spotlight.util.logger
 import org.apache.commons.io.IOUtils
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.HttpClients
+import org.apache.hc.client5.http.classic.methods.HttpGet
+import org.apache.hc.client5.http.impl.classic.HttpClients
 
 class ImageDownloaderService : Logging {
     fun fetchImage(downloadableImage: DownloadableImage): ByteArray {
@@ -15,7 +15,7 @@ class ImageDownloaderService : Logging {
         logger().debug("Fetching image ${downloadableImage.url}")
 
         httpClient.execute(HttpGet(downloadableImage.url)).use {
-            val statusCode = it.statusLine.statusCode
+            val statusCode = it.code
             if (statusCode != 200) {
                 throw SpotlightException(String.format("Fail to retrieve image content: %s", statusCode))
             }
