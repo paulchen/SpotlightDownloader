@@ -2,6 +2,7 @@ package at.rueckgr.spotlight.service
 
 import at.rueckgr.spotlight.model.DownloadableImage
 import at.rueckgr.spotlight.util.Logging
+import at.rueckgr.spotlight.util.SpotlightException
 import at.rueckgr.spotlight.util.logger
 
 class Worker (private val imageDataDownloaderService: ImageDataDownloaderService,
@@ -13,6 +14,11 @@ class Worker (private val imageDataDownloaderService: ImageDataDownloaderService
             return
         }
 
-        downloadDirectoryService.saveImageIfNotExists(downloadableImage)
+        try {
+            downloadDirectoryService.saveImageIfNotExists(downloadableImage)
+        }
+        catch (e: SpotlightException) {
+            logger().error("Failed to save image", e)
+        }
     }
 }

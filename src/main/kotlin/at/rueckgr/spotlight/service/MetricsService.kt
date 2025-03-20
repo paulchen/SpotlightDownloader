@@ -19,6 +19,10 @@ class MetricsService : Logging {
         }
     }
 
+    fun getMetric(metric: Metric): Int {
+        return metricValues[metric]?.toInt() ?: 0
+    }
+
     enum class Metric {
         RENAME_IMAGE, DOWNLOAD_IMAGE, NO_IMAGE_DATA, DOWNLOAD_IMAGE_DATA
     }

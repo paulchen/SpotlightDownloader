@@ -59,6 +59,7 @@ class ImageDataDownloaderService (private val localesService: LocalesService, pr
             }
 
             val body = IOUtils.toString(it.entity.content, StandardCharsets.UTF_8)
+            logger().debug("Data fetched: {}", body)
             val batchrsp = objectMapper.readTree(body)["batchrsp"]
             if (batchrsp["errors"] != null) {
                 val errorCode = batchrsp["errors"][0]["code"].asInt()
@@ -70,6 +71,8 @@ class ImageDataDownloaderService (private val localesService: LocalesService, pr
             }
 
             val item = batchrsp["items"][0]["item"].asText()
+                .replace("var adData = ", "")
+                .replace("function.*\$".toRegex(), "")
             val jsonNode = objectMapper.readTree(item)
 
             val imageNode = jsonNode["ad"]["image_fullscreen_001_landscape"]

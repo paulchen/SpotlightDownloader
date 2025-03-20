@@ -26,6 +26,11 @@ fun main() {
 
         metadataService.saveMetadata()
         metricsService.logMetrics()
+
+        if (metricsService.getMetric(MetricsService.Metric.DOWNLOAD_IMAGE) == 0) {
+            log.error("No image was downloaded")
+            exitProcess(1)
+        }
     }
     catch (e: Throwable) {
         log.error("Exception occurred", e)
